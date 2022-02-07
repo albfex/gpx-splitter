@@ -25,10 +25,10 @@ class GpxSplitter(val outputFolder : File){
         val nodes =   xpath.evaluate("//gpx/trk", doc, XPathConstants.NODESET);
         if (nodes !is NodeList) return;
 
-        (0..nodes.length-1).forEach{i->output(nodes.item(i), i)}
+        (0..nodes.length-1).forEach{i->outputSingleTrack(nodes.item(i), i)}
     }
 
-    fun output(node: Node, index : Int) {
+    fun outputSingleTrack(node: Node, index : Int) {
         val trkName = node.childNodes.item(1)?.textContent ?: "track_"+index
 
         val doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
@@ -45,21 +45,6 @@ class GpxSplitter(val outputFolder : File){
 
         val transformer = TransformerFactory.newInstance().newTransformer();
         transformer.transform(DOMSource(gpx),  StreamResult(FileWriter(outputFile)));
-//    for (int i=1; i <= nodes.getLength(); i++) {
-//        Node imported = currentDoc.importNode(nodes.item(i-1), true);
-//        rootNode.appendChild(imported);
-//
-//        if (i % itemsPerFile == 0) {
-//            writeToFile(rootNode, currentFile);
-//
-//            rootNode = currentDoc.createElement("T0020");
-//            currentFile = new File((++fileNumber)+".xml");
-//        }
-//    }
-//
-//    writeToFile(rootNode, currentFile);
-        //val transformer = TransformerFactory.newInstance().newTransformer();
-        //  transformer.transform(new DOMSource(node), new StreamResult(new FileWriter(file)));
     }
 }
 
@@ -76,7 +61,6 @@ fun main(args: Array<String>) {
         println("Directory " + args[1]+ " does not exist.");
         return;
     }
-
 
     GpxSplitter(File(args[1])).split(File(args[0]))
 }
