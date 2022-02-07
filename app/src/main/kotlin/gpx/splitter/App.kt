@@ -17,15 +17,15 @@ import javax.xml.xpath.XPathConstants
 import javax.xml.xpath.XPathFactory
 
 class GpxSplitter(val outputFolder : File){
+    
     fun split(input : File){
-        val dbf = DocumentBuilderFactory.newInstance();
-        val doc = dbf.newDocumentBuilder().parse(input);
+        val doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(input);
         val xpath = XPathFactory.newInstance().newXPath();
 
         val nodes =   xpath.evaluate("//gpx/trk", doc, XPathConstants.NODESET);
         if (nodes !is NodeList) return;
 
-        (0..nodes.length-1).forEach{i->outputSingleTrack(nodes.item(i), i)}
+        (0 until nodes.length).forEach{ i->outputSingleTrack(nodes.item(i), i)}
     }
 
     fun outputSingleTrack(node: Node, index : Int) {
